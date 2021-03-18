@@ -1,46 +1,76 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjectManagement.Data.Implementation;
-using ProjectManagement.Entities;
+using System;
 using System.Collections.Generic;
 
 
 namespace ProjectManagement.Api.Controllers
 {
-    public class BaseController<T> : ControllerBase where T : class
+    public class BaseController<T> : ControllerBase 
     {
-        private Sprint1TestStorage<T> _storage;
-
-        public BaseController(Sprint1TestStorage<T> storage)
-        {
-            _storage = storage;
-        }
-
-        [Route("details")]
         [HttpGet]
         public IEnumerable<T> Get()
         {
-            return _storage.GetAll();
+            return GetData();
         }
 
-        [Route("detailsById")]
         [HttpGet]
-        public IEnumerable<T> Get(long id)
+        [Route("{id:long}")]
+        public IActionResult Get(long id)
         {
-            return (IEnumerable<T>)_storage.GetById(id);
+            var data = GetDataById(id);
+            if (data != null)
+            {
+                return Ok(data);
+            }
+            return BadRequest("no data found for the ID");
         }
 
-        [Route("includeItem")]
         [HttpPost]
-        public void Post(long id, [FromBody] T value)
+        [Route("Update")]
+        public IActionResult Post(T data)
         {
-            _storage.AddOrUpdate(id, value);
+            return UpdateData(data);
         }
 
-        [Route("changeItem")]
         [HttpPut]
-        public void Put(long id, [FromBody] T value)
+        [Route("Add")]
+        public IActionResult Put(T data)
         {
-            _storage.AddOrUpdate(id, value);
+            return AddData(data);
+        }
+
+        [HttpDelete("{id:long}")]
+        public IActionResult Delete(long id)
+        {
+            if (DeleteData(id))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        protected virtual IActionResult UpdateData(T data)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual bool DeleteData(long id)
+        {
+            throw new NotImplementedException();
+        }
+        protected virtual IActionResult AddData(T Data)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual T GetDataById(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual IEnumerable<T> GetData()
+        {
+            throw new NotImplementedException();
         }
     }
 }

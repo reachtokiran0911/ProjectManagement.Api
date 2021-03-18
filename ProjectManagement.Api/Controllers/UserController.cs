@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Entities;
-using System;
+using ProjectManagement.Shared;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.Extensions.Configuration;
-using Swashbuckle.AspNetCore.Annotations;
-using ProjectManagement.Data.Implementation;
 
 namespace ProjectManagement.Api.Controllers
 {
@@ -15,9 +11,66 @@ namespace ProjectManagement.Api.Controllers
     [ApiController]
     public class UserController : BaseController<User>
     {
-        
-        public UserController(Sprint1TestStorage<User> storage) : base(storage)
+        private PMContext _context;
+        public UserController(PMContext projectContext)
         {
+            _context = projectContext;
+        }
+
+        protected override User GetDataById(long id)
+        {
+            var data = _context.Users.Find(id);
+            if (data != null)
+            {
+                return data;
+            }
+            return null;
+        }
+
+        protected override IEnumerable<User> GetData()
+        {
+            return _context.Users.ToList();
+        }
+
+        protected override IActionResult UpdateData(User user)
+        {
+            try
+            {
+                _context.Users.Update(user);
+                _context.SaveChanges();
+                return Ok(user);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest("record not exists");
+            }
+        }
+
+        protected override bool DeleteData(long id)
+        {
+            var itemToDelete = _context.Users.Find(id);
+            if (itemToDelete != null)
+            {
+                _context.Users.Remove(itemToDelete);
+                _context.SaveChanges();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        protected override IActionResult AddData(User user)
+        {
+            var currentTask = _context.Users.Find(user.ID);
+            if (currentTask == null)
+            {
+                _context.Users.Add(user);
+                _context.SaveChanges();
+                return Ok(user);
+            }
+
+            return BadRequest("user already exists");
         }
 
         [HttpPost("authenticate")]

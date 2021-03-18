@@ -9,6 +9,8 @@ using ProjectManagement.Data.Interfaces;
 using ProjectManagement.Entities;
 using System;
 using Microsoft.EntityFrameworkCore;
+using ProjectManagement.Shared;
+
 namespace ProjectManagement.Api
 {
     public class Startup
@@ -36,12 +38,10 @@ namespace ProjectManagement.Api
                         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                     });
             });
+            services.AddDbContext<PMContext>(opt => opt.UseInMemoryDatabase(databaseName: "ProjectManagementDatabase"));
             services.AddControllers();
-            services.AddSingleton(typeof(Sprint1TestStorage<>));
-            //for next sprint 2
-            // services.AddDbContext<RepositoryPatternDemoContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
-            // services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-
+           // services.AddSingleton(typeof(Sprint1TestStorage<>));
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
