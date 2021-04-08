@@ -14,7 +14,7 @@ namespace ProjectManagement.Shared
 
         public DbSet<Project> Projects { get; set; }
 
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<Tasks> Tasks { get; set; }
 
         public DbSet<User> Users { get; set; }
 
@@ -36,9 +36,9 @@ namespace ProjectManagement.Shared
 
                 if (!context.Tasks.Any())
                 {
-                    context.Tasks.AddRange(new Task { ID = 1, ProjectID = 1, Status = TaskStatus.InProgress, AssignedToUserID = 1, Detail = "test task assigned to user 1 and project 1", CreatedOn = DateTime.Today },
-                        new Task { ID = 2, ProjectID = 2, Status = TaskStatus.QA, AssignedToUserID = 2, Detail = "test task assigned to user 2 and project 2", CreatedOn = DateTime.Today },
-                        new Task { ID = 3, ProjectID = 2, Status = TaskStatus.Completed, AssignedToUserID = 2, Detail = "test task assigned to user 2 and project 2", CreatedOn = DateTime.Today });
+                    context.Tasks.AddRange(new Tasks { ID = 1, ProjectID = 1, Status = TaskStatus.InProgress, AssignedToUserID = 1, Detail = "test task assigned to user 1 and project 1", CreatedOn = DateTime.Today },
+                        new Tasks { ID = 2, ProjectID = 2, Status = TaskStatus.QA, AssignedToUserID = 2, Detail = "test task assigned to user 2 and project 2", CreatedOn = DateTime.Today },
+                        new Tasks { ID = 3, ProjectID = 2, Status = TaskStatus.Completed, AssignedToUserID = 2, Detail = "test task assigned to user 2 and project 2", CreatedOn = DateTime.Today });
                     context.SaveChanges();
                 }
 

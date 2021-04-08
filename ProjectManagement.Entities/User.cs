@@ -13,6 +13,6 @@ namespace ProjectManagement.Entities
 
         public string Password { get; set; }
 
-        public virtual IEnumerable<Task> Tasks { get; set; }
+        public virtual IEnumerable<Tasks> Tasks { get; set; }
     }
 }

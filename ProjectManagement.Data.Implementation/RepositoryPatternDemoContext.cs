@@ -17,7 +17,7 @@ namespace ProjectManagement.Data.Implementation
         }
 
         public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<Task> Task { get; set; }
+        public virtual DbSet<Tasks> Task { get; set; }
 
         public virtual DbSet<Project> Project { get; set; }
 

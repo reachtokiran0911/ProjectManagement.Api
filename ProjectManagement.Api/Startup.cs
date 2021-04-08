@@ -38,9 +38,15 @@ namespace ProjectManagement.Api
                         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                     });
             });
-            services.AddDbContext<PMContext>(opt => opt.UseInMemoryDatabase(databaseName: "ProjectManagementDatabase"));
+            services.AddDbContext<PMContext>(opt =>
+            {
+                opt.UseInMemoryDatabase("ProjectManagementDatabase");
+            });
+            services.AddTransient(typeof(IBaseRepository<Project>), typeof(BaseRepository<Project>));
+            services.AddTransient(typeof(IBaseRepository<User>), typeof(BaseRepository<User>));
+            services.AddTransient(typeof(IBaseRepository<Tasks>), typeof(BaseRepository<Tasks>));
+            services.AddTransient(typeof(IUserRepository), typeof(UserRepository));
             services.AddControllers();
-           // services.AddSingleton(typeof(Sprint1TestStorage<>));
           
         }
 

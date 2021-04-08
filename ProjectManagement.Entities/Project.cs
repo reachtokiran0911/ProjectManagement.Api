@@ -8,7 +8,7 @@ namespace ProjectManagement.Entities
     {
         public Project()
         {
-            this.Tasks = new List<Task>();
+            this.Tasks = new List<Tasks>();
         }
 
         public string Name { get; set; }
@@ -17,6 +17,6 @@ namespace ProjectManagement.Entities
 
         public DateTime CreatedOn { get; set; }
 
-        public virtual IEnumerable<Task> Tasks { get; set; }
+        public virtual IEnumerable<Tasks> Tasks { get; set; }
     }
 }

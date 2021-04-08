@@ -1,76 +1,67 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-
+using ProjectManagement.Data.Interfaces;
+using ProjectManagement.Entities;
+using System.Threading.Tasks;
 
 namespace ProjectManagement.Api.Controllers
 {
-    public class BaseController<T> : ControllerBase 
+    public class BaseController<T> : ControllerBase where T : BaseEntity
     {
-        [HttpGet]
-        public IEnumerable<T> Get()
+        private readonly IBaseRepository<T> _baseRepository;
+        public BaseController(IBaseRepository<T> baseRepository)
         {
-            return GetData();
+            _baseRepository = baseRepository;
         }
 
         [HttpGet]
-        [Route("{id:long}")]
+        public IActionResult Get()
+        {
+            var result = _baseRepository.Get();
+            if (result != null)
+                return Ok(result);
+            else
+                return StatusCode(500);
+        }
+
+        [HttpGet("{id}")]
         public IActionResult Get(long id)
         {
-            var data = GetDataById(id);
-            if (data != null)
-            {
-                return Ok(data);
-            }
-            return BadRequest("no data found for the ID");
+            var result = _baseRepository.Get(id);
+            if (result != null)
+                return Ok(result);
+            else
+                return StatusCode(500);
         }
 
         [HttpPost]
-        [Route("Update")]
-        public IActionResult Post(T data)
+        public async Task<IActionResult> Add([FromBody] T value)
         {
-            return UpdateData(data);
+            var result = await _baseRepository.Add(value);
+            if (result != null)
+                return Ok(result);
+            else
+                return StatusCode(500);
         }
 
         [HttpPut]
-        [Route("Add")]
-        public IActionResult Put(T data)
+        public async Task<IActionResult> Put([FromBody] T value)
         {
-            return AddData(data);
+            var result = await _baseRepository.Update(value);
+            if (result != null)
+                return Ok(result);
+            else
+                return StatusCode(500);
         }
 
-        [HttpDelete("{id:long}")]
-        public IActionResult Delete(long id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(long id)
         {
-            if (DeleteData(id))
-            {
-                return Ok();
-            }
-            return BadRequest();
-        }
+            var result = _baseRepository.Get(id);
+            if (result == null)
+                return StatusCode(500);
 
-        protected virtual IActionResult UpdateData(T data)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual bool DeleteData(long id)
-        {
-            throw new NotImplementedException();
-        }
-        protected virtual IActionResult AddData(T Data)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual T GetDataById(long id)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual IEnumerable<T> GetData()
-        {
-            throw new NotImplementedException();
+            await _baseRepository.Delete(id);
+            return Ok();
         }
     }
-}
+    }

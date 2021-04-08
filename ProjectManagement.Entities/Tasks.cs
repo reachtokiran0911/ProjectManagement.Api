@@ -5,9 +5,8 @@ using System.Text;
 
 namespace ProjectManagement.Entities
 {
-    public class Task : BaseEntity
+    public class Tasks : BaseEntity
     {
-
         public long ProjectID { get; set; }
 
         public string Detail { get; set; }
